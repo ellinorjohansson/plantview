@@ -5,7 +5,7 @@ const HeaderSection = () => {
     <section>
       <div className="flex flex-row gap-5 items-center">
         <span
-          className="bg-yellow-200/10 backdrop-blur-md border border-white/20 shadow-lg rounded-full px-3 py-3 w-15 h-15"
+          className="backdrop-blur-md border border-white/10 shadow-lg rounded-full px-3 py-3 w-15 h-15"
           style={{
             animation: "float 3s ease-in-out infinite",
           }}
