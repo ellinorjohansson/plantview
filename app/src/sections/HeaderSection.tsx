@@ -13,7 +13,7 @@ const HeaderSection = () => {
           <SvgPlant />
         </span>
         <div>
-          <h1 className="mb-1 flex items-center text-4xl tracking-tight text-black/90 md:text-5xl">
+          <h1 className="mb-1 flex items-center text-4xl! tracking-tight text-black/90 md:text-5xl">
             Sprout Diary
           </h1>
           <p className="font-sans text-sm text-black/60">
