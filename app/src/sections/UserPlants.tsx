@@ -9,7 +9,7 @@ const UserPlants = () => {
           </p>
         </div>
         <div>
-          <button className="font-sans text-sm flex flex-row items-center bg-linear-to-r from-green-600 via-green-800 to-emerald-800 rounded-full cursor-pointer px-5 py-2 text-amber-50">
+          <button className="font-sans text-sm flex flex-row items-center shadow-lg bg-linear-to-r from-green-600 via-green-800 to-emerald-800 rounded-full cursor-pointer px-5 py-2 text-amber-50">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
