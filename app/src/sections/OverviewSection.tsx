@@ -1,6 +1,6 @@
 const OverviewSection = () => {
   return (
-    <section className="flex flex-row gap-5 px-4 md:px-8 lg:px-12">
+    <section className="flex flex-col md:flex-row gap-5 px-4 md:px-8 lg:px-12">
       <div className="bg-amber-50 rounded-4xl p-5 w-full backdrop-blur-md border border-white/10 shadow-lg">
         <div className="flex flex-row justify-between items-center">
           <span className="text-black/60 text-xs font-sans">
