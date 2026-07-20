@@ -14,8 +14,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --font-fraunces: var(--font-fraunces);
   --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-cormorant);
 }
 
 * {
