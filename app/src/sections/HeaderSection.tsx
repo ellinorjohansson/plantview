@@ -17,7 +17,7 @@ const HeaderSection = () => {
             Sprout Diary
           </h1>
           <p className="font-sans text-sm text-black/60">
-            a tiny, cozy home for your houseplants
+            A tiny, cozy home for your houseplants
           </p>
         </div>
       </div>
