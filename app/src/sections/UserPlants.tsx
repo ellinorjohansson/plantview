@@ -1,6 +1,8 @@
+import SvgPlant2 from "../components/SvgPlant2";
+
 const UserPlants = () => {
   return (
-    <section className="mt-15 mb-10 px-4 md:px-8 lg:px-12">
+    <section className="mt-15 mb-30 px-4 md:px-8 lg:px-12">
       <div className="flex flex-row justify-between items-center">
         <div>
           <h2 className="text-2xl">Your green friends</h2>
@@ -22,6 +24,12 @@ const UserPlants = () => {
             </svg>
             Add a plant
           </button>
+        </div>
+      </div>
+
+      <div className="bg-amber-50 rounded-4xl">
+        <div className="flex justify-center mt-5">
+          <SvgPlant2 />
         </div>
       </div>
     </section>
