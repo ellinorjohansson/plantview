@@ -1,4 +1,102 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import {
+  dayDifference,
+  nextWateringDate,
+  Plant,
+  storageKey,
+} from "./userPlantsHelpers";
+
 const OverviewSection = () => {
+  const [plants, setPlants] = useState<Plant[]>([]);
+  const [waterings, setWaterings] = useState(0);
+  const [now, setNow] = useState<number>(() => Date.now());
+
+  useEffect(() => {
+    const normalize = (items: any[]): Plant[] =>
+      items.map((p) => ({
+        id: String(p.id || ""),
+        name: String(p.name || ""),
+        variety: String(p.variety || ""),
+        frequency: Number(p.frequency) || 7,
+        lastWatered: String(
+          p.lastWatered || new Date(0).toISOString().slice(0, 10),
+        ),
+        createdAt: String(
+          p.createdAt || p.lastWatered || new Date().toISOString().slice(0, 10),
+        ),
+        notes: String(p.notes || ""),
+      }));
+
+    const load = () => {
+      try {
+        const stored = window.localStorage.getItem(storageKey);
+        const parsed = stored ? (JSON.parse(stored) as any[]) : [];
+        setPlants(normalize(parsed));
+      } catch {
+        setPlants([]);
+      }
+      try {
+        const key = `${storageKey}-waterings`;
+        setWaterings(Number(window.localStorage.getItem(key) || "0"));
+      } catch {
+        setWaterings(0);
+      }
+    };
+
+    load();
+    setNow(Date.now());
+
+    const handler = (e: Event) => {
+      const ce = e as CustomEvent;
+      if (ce && ce.detail) {
+        if (Array.isArray(ce.detail)) {
+          setPlants(normalize(ce.detail));
+          setNow(Date.now());
+          return;
+        }
+        if (
+          typeof ce.detail === "object" &&
+          ce.detail.waterings !== undefined
+        ) {
+          setWaterings(Number(ce.detail.waterings));
+          setNow(Date.now());
+          return;
+        }
+      }
+      // fallback: reload everything from storage
+      load();
+      setNow(Date.now());
+    };
+
+    window.addEventListener("plantview:update", handler);
+    const interval = window.setInterval(
+      () => setNow(Date.now()),
+      1000 * 60 * 60,
+    ); // refresh `now` hourly
+    return () => {
+      window.removeEventListener("plantview:update", handler);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const total = plants.length;
+  const thirsty = plants.filter(
+    (p) => dayDifference(nextWateringDate(p)) <= 0,
+  ).length;
+  const newPlanted = plants.filter((p) => {
+    try {
+      const created = new Date(p.createdAt);
+      const diff = Math.floor(
+        (now - created.getTime()) / (1000 * 60 * 60 * 24),
+      );
+      return diff <= 7;
+    } catch {
+      return false;
+    }
+  }).length;
+
   return (
     <section className="flex flex-col md:flex-row gap-5 px-4 md:px-8 lg:px-12">
       <div className="bg-amber-50 rounded-4xl p-5 w-full backdrop-blur-md border border-white/10 shadow-lg">
@@ -19,7 +117,7 @@ const OverviewSection = () => {
             </svg>
           </div>
         </div>
-        <span className="text-4xl font-fraunces! font-bold!">0</span>
+        <span className="text-4xl font-fraunces! font-bold!">{total}</span>
       </div>
 
       <div className="bg-amber-50 rounded-4xl p-5 w-full backdrop-blur-md border border-white/10 shadow-lg">
@@ -45,7 +143,7 @@ const OverviewSection = () => {
             </svg>
           </div>
         </div>
-        <span className="text-4xl font-fraunces! font-bold!">0</span>
+        <span className="text-4xl font-fraunces! font-bold!">{thirsty}</span>
       </div>
 
       <div className="bg-amber-50 rounded-4xl p-5 w-full backdrop-blur-md border border-white/10 shadow-lg">
@@ -73,7 +171,7 @@ const OverviewSection = () => {
             </svg>
           </div>
         </div>
-        <span className="text-4xl font-fraunces! font-bold!">0</span>
+        <span className="text-4xl font-fraunces! font-bold!">{waterings}</span>
       </div>
 
       <div className="bg-amber-50 rounded-4xl p-5 w-full backdrop-blur-md border border-white/10 shadow-lg">
@@ -92,7 +190,7 @@ const OverviewSection = () => {
             </svg>
           </div>
         </div>
-        <span className="text-4xl font-fraunces! font-bold!">0</span>
+        <span className="text-4xl font-fraunces! font-bold!">{newPlanted}</span>
       </div>
     </section>
   );

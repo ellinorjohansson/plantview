@@ -4,6 +4,7 @@ export type Plant = {
   variety: string;
   frequency: number;
   lastWatered: string;
+  createdAt: string;
   notes: string;
 };
 
@@ -33,5 +34,6 @@ export const emptyPlant: Plant = {
   variety: "",
   frequency: 7,
   lastWatered: new Date(0).toISOString().slice(0, 10),
+  createdAt: new Date(0).toISOString().slice(0, 10),
   notes: "",
 };

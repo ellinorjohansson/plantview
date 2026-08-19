@@ -50,6 +50,11 @@ const UserPlants = () => {
   const persist = (items: Plant[]) => {
     setPlants(items);
     window.localStorage.setItem(storageKey, JSON.stringify(items));
+    try {
+      window.dispatchEvent(
+        new CustomEvent("plantview:update", { detail: items }),
+      );
+    } catch {}
   };
 
   const openForm = (plant?: Plant) => {
@@ -60,6 +65,7 @@ const UserPlants = () => {
             ...emptyPlant,
             id: createId(),
             lastWatered: new Date().toISOString().slice(0, 10),
+            createdAt: new Date().toISOString().slice(0, 10),
           },
     );
     setEditing(Boolean(plant));
@@ -94,14 +100,26 @@ const UserPlants = () => {
   const deletePlant = (id: string) =>
     persist(plants.filter((plant) => plant.id !== id));
 
-  const waterNow = (id: string) =>
-    persist(
-      plants.map((plant) =>
-        plant.id === id
-          ? { ...plant, lastWatered: new Date().toISOString().slice(0, 10) }
-          : plant,
-      ),
+  const waterNow = (id: string) => {
+    const updated = plants.map((plant) =>
+      plant.id === id
+        ? { ...plant, lastWatered: new Date().toISOString().slice(0, 10) }
+        : plant,
     );
+    persist(updated);
+    try {
+      const key = `${storageKey}-waterings`;
+      const current = Number(window.localStorage.getItem(key) || "0");
+      window.localStorage.setItem(key, String(current + 1));
+      try {
+        window.dispatchEvent(
+          new CustomEvent("plantview:update", {
+            detail: { waterings: current + 1 },
+          }),
+        );
+      } catch {}
+    } catch {}
+  };
 
   return (
     <section className="mt-15 mb-30 px-4 md:px-8 lg:px-12">
